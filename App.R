@@ -3,14 +3,14 @@ library(keras)
 library(dplyr)
 library(plotly)
 
-######  UI PART #################################
+#################################  UI PART ###########################################################
 
 ui <- dashboardPage(
   dashboardHeader(title = "A simple Video analyzer", titleWidth = 600),
   dashboardSidebar(width=300,
     sidebarMenu(
       menuItem("Introduction", tabName = "introduction", icon = icon("dashboard")),
-      numericInput("fps", "Frames per second ", 1, 0.01, 1,0.01),
+      numericInput("fps", "Frames per second (0.5 = 1 frame per 2 s.) ", 1, 0.01, 1,0.01),
       fileInput('file1', 'Choose an image (max 500 MB)'),
       menuItem("Video images", tabName = "videoanalysis", icon = icon("th")),
       menuItem("Info on extracted classes", tabName = "extracted", icon = icon("th"))
@@ -23,7 +23,7 @@ ui <- dashboardPage(
         h3("Introduction"),
         list(
           h4("ffmpeg is used to extract images from the video, then using the keras package a VGG16 pre 
-trained network is used to tag the extracted images for each image I return the top 3 tags from vgg16"),
+              trained network is used to tag the extracted images for each image I return the top 3 tags from vgg16"),
           p(" "),
           h4("Cheers, Longhow")
         )
@@ -47,12 +47,13 @@ trained network is used to tag the extracted images for each image I return the 
   )
 )
 
-#######  SERVER PART ########################################################
+
+################################  SERVER PART ########################################################
 
 options(shiny.maxRequestSize=500*1024^2)
 
 convertVideoToImages <- function(file, framesPerSecond = 1) {
-  
+  ## helper function to call ffmpeg from within R
   ffCommand <- paste0(
     "ffmpeg -i \"", 
     file, 
@@ -62,7 +63,6 @@ convertVideoToImages <- function(file, framesPerSecond = 1) {
     " \"www\\out_%04d.jpg\"")
   system(ffCommand)
 }
-
 
 vgg16 = application_vgg16(weights = 'imagenet')
 
@@ -91,7 +91,7 @@ server <- function(input, output, session) {
       
       for(i in fk)
       {
-        img = image_load(paste0("www\\",i), target_size = c(224,224)    )
+        img = image_load(paste0("www\\",i), target_size = c(224,224))
         x = image_to_array(img)
         
         dim(x) <- c(1, dim(x))
@@ -116,14 +116,14 @@ server <- function(input, output, session) {
     }
   })
   
-  ####### TABLE with extracted images #############################
+  ######## TABLE with extracted images #############################
   output$images = renderDataTable({
     
     tmp = extractedImages()
     tmp %>% select(-class_name, -image)
   },  escape=FALSE)
 
-  ######## print video information ###################
+  ######## print video information #################################
   output$videoinfo = renderPrint({
     inFile = input$file1
     ffCommand <- paste0(
@@ -134,7 +134,7 @@ server <- function(input, output, session) {
     print(a)
   })
   
-  ####### plotly graph of extracted tags ##############
+  ######## plotly graph of extracted tags #########################
   output$tagoverview = renderPlotly({
     extractedImages() %>% 
       group_by(class_description) %>% 
