@@ -11,7 +11,7 @@ ui <- dashboardPage(
     sidebarMenu(
       menuItem("Introduction", tabName = "introduction", icon = icon("dashboard")),
       numericInput("fps", "Frames per second (0.5 = 1 frame per 2 s.) ", 1, 0.01, 1,0.01),
-      fileInput('file1', 'Choose an image (max 500 MB)'),
+      fileInput('file1', 'Upload a video (max 500 MB)'),
       menuItem("Video images", tabName = "videoanalysis", icon = icon("th")),
       menuItem("Info on extracted classes", tabName = "extracted", icon = icon("th"))
     )
@@ -22,8 +22,9 @@ ui <- dashboardPage(
         tabName = "introduction",
         h3("Introduction"),
         list(
-          h4("ffmpeg is used to extract images from the video, then using the keras package a VGG16 pre 
-              trained network is used to tag the extracted images for each image I return the top 3 tags from vgg16"),
+          h4("Upload a video (< 500 MB), then ffmpeg is used to extract images from the video, specify the number of frames per second.
+              A value of 0.125 means one frame every 8 seconds. Then using the keras package a VGG16 pre trained network is
+              used to tag the extracted images. For each image the top 3 tags are returned"),
           p(" "),
           h4("Cheers, Longhow")
         )
