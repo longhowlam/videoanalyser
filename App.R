@@ -61,7 +61,7 @@ convertVideoToImages <- function(file, framesPerSecond = 1) {
     "\"  -s 600x400" ,
     " -t 1200 -r ",
     framesPerSecond,
-    " \"www\\out_%04d.jpg\"")
+    " \"www/out_%04d.jpg\"")
   system(ffCommand)
 }
 
@@ -92,7 +92,7 @@ server <- function(input, output, session) {
       
       for(i in fk)
       {
-        img = image_load(paste0("www\\",i), target_size = c(224,224))
+        img = image_load(paste0("www/",i), target_size = c(224,224))
         x = image_to_array(img)
         
         dim(x) <- c(1, dim(x))
