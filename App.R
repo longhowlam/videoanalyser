@@ -2,6 +2,8 @@ library(shinydashboard)
 library(keras)
 library(dplyr)
 library(plotly)
+library(shinycssloaders)
+
 
 #################################  UI PART ###########################################################
 
@@ -33,7 +35,7 @@ ui <- dashboardPage(
         tabName = "videoanalysis",
         h4("images taken from video"),
         fluidRow(
-          dataTableOutput('images')
+          withSpinner(dataTableOutput('images'))
         )
       ),
       tabItem(
@@ -41,7 +43,7 @@ ui <- dashboardPage(
         h4("Video info and Overview of tags extracted"),
         fluidRow(
           textOutput('videoinfo'),
-          plotlyOutput('tagoverview')
+          withSpinner(plotlyOutput('tagoverview'))
         )
       )
     )
